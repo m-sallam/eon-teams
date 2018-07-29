@@ -1,6 +1,6 @@
 // import element from 'element-ui'
 
-const root = process.env.ROOT
+const root = process.env.VUE_APP_ROOT
 
 const req = async (path, method, body, token) => {
   let signedHeader = {
