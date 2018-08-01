@@ -4,7 +4,7 @@
       <el-collapse-item v-for="task in tasks" :title="task.title" :key="task._id">
         <div style="word-break: break-all;"><strong>Description: </strong> {{task.description}}</div>
         <div v-if="task.deadline"><strong>Deadline: </strong> {{new Date(task.deadline).toDateString()}}</div>
-        <div v-if="task.users.length > 0" style="word-break: break-all;"><strong>Assigned Users: </strong> <span v-for="user in task.users">{{user.username}}</span></div>
+        <div v-if="task.users.length > 0" style="word-break: break-all;"><strong>Assigned Users: </strong> <span v-for="user in task.users">{{user.username}} </span></div>
         <div v-if="task.attachments.length > 0" style="word-break: break-all;">
           <strong>Attachments: </strong> 
           <span v-for="attachment in task.attachments">
