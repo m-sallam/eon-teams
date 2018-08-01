@@ -4,7 +4,8 @@
       <span>Recent Activities</span>
     </div>
     <vue-perfect-scrollbar style="height: 350px">
-      <el-alert v-for="index in 30" :key="index" :title="index.toString()" type="info" :closable="false"></el-alert>
+      <el-alert v-for="activity in activities" :key="activity.time" :title="activity.content"
+       :description="new Date(activity.time).toDateString()" type="info" :closable="false"></el-alert>
     </vue-perfect-scrollbar>
   </el-card> 
 </template>
@@ -16,6 +17,9 @@
     computed: {
       project () {
         return this.$store.state.project.currentProject
+      },
+      activities () {
+        return this.project.activities.reverse()
       }
     },
     components: {

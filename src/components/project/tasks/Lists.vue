@@ -28,7 +28,7 @@
     },
     computed: {
       lists () {
-        return this.project.lists.filter(i => i.title.includes(this.filter))
+        return this.project.lists.filter(i => i.title.toLowerCase().includes(this.filter.toLowerCase()))
       },
       project () {
         return this.$store.state.project.currentProject

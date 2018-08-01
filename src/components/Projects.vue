@@ -28,7 +28,7 @@
     },
     computed: {
       projects () {
-        return this.$store.state.project.projects.filter(i => i.title.includes(this.filter))
+        return this.$store.state.project.projects.filter(i => i.title.toLowerCase().includes(this.filter.toLowerCase()))
       }
     },
     methods: {

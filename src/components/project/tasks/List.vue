@@ -43,13 +43,13 @@
         return this.project.lists.find(l => l._id === this.$route.params.listId)
       },
       activeTasks () {
-        return this.list.tasks.filter(t => t.title.includes(this.filter) && t.state === 'active')
+        return this.list.tasks.filter(t => t.title.toLowerCase().includes(this.filter.toLowerCase()) && t.state === 'active')
       },
       completedTasks () {
-        return this.list.tasks.filter(t => t.title.includes(this.filter) && t.state === 'completed')
+        return this.list.tasks.filter(t => t.title.toLowerCase().includes(this.filter.toLowerCase()) && t.state === 'completed')
       },
       missedTasks () {
-        return this.list.tasks.filter(t => t.title.includes(this.filter) && t.state === 'missed')
+        return this.list.tasks.filter(t => t.title.toLowerCase().includes(this.filter.toLowerCase()) && t.state === 'missed')
       }
     },
     components: {
