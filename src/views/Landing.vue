@@ -3,6 +3,7 @@
     <el-carousel trigger="click" height="80vh" style="background-color: gainsboro">
       <el-carousel-item >
         <h3>*woosh* this is a feature rich landing page *woosh*</h3>
+        <el-button @click="$message('You are not worthy!')">Go to super secret super amazing landing page instead</el-button>
       </el-carousel-item>
       <el-carousel-item >
           <h3>*woosh* creaaaaaate projects and collaboraaaate with your team members *woosh*</h3>
