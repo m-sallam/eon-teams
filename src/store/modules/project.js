@@ -2,7 +2,9 @@ import {req} from '../request'
 
 const state = {
   projects: [],
-  currentProject: {}
+  currentProject: {},
+  chat: [],
+  newMessages: false
 }
 
 const getters = {
@@ -15,6 +17,16 @@ const mutations = {
   },
   updateCurrentProject (state, project) {
     state.currentProject = project
+  },
+  addMessage (state, {message, route}) {
+    state.chat.push(message)
+    state.newMessages = !route.path.includes('chat')
+  },
+  updateChat (state, chat) {
+    state.chat = chat
+  },
+  clearNewMessages (state) {
+    state.newMessages = false
   }
 }
 
@@ -83,6 +95,17 @@ const actions = {
   async markTask ({commit, state, rootState}, {listId, task}) {
     let res = await req(`/projects/${state.currentProject._id}/lists/${listId}/tasks/${task._id}/mark`, 'POST', JSON.stringify({task}), rootState.user.token)
     return res
+  },
+  async addMessageToChat ({commit, state, rootState}, {message, route}) {
+    commit('addMessage', {message, route})
+  },
+  async getChat ({commit, state, rootState}) {
+    let res = await req(`/projects/${state.currentProject._id}/chat`, 'GET', undefined, rootState.user.token)
+    commit('updateChat', res.json.chat)
+    return res
+  },
+  async noNewMessages ({commit, state, rootState}) {
+    commit('clearNewMessages')
   }
 }
 

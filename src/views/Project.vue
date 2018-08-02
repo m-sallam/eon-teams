@@ -8,9 +8,11 @@
         <el-menu-item :index="'/projects/' + project._id + '/lists'">
           <i class="el-icon-tickets"></i>
         </el-menu-item>
-        <el-menu-item :index="'/projects/' + project._id + '/chat'">
-          <i class="el-icon-message"></i>
-        </el-menu-item>
+        <el-badge :is-dot="newMessages">
+          <el-menu-item :index="'/projects/' + project._id + '/chat'">
+            <i class="el-icon-message"></i>
+          </el-menu-item>
+        </el-badge>
       </el-menu>
     </el-col>
     <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22" >
@@ -21,12 +23,15 @@
           <el-breadcrumb-item v-if="showList">{{list}}</el-breadcrumb-item>
         </el-breadcrumb>
       </el-card>
-      <router-view/>
+      <router-view @message="message"/>
     </el-col>
   </el-row>
 </template>
 
 <script>
+  import io from 'socket.io-client'
+  const client = io(process.env.VUE_APP_ROOT)
+
   export default {
     data () {
       return {
@@ -65,11 +70,20 @@
       },
       showList () {
         return this.$route.params.listId
+      },
+      newMessages () {
+        return this.$store.state.project.newMessages
       }
     },
     created () {
       window.addEventListener('resize', this.handleResize)
       this.handleResize()
+    },
+    mounted () {
+      client.emit('join', this.project._id)
+      client.on('message', message => {
+        this.$store.dispatch('addMessageToChat', {message, route: this.$route})
+      })
     },
     destroyed () {
       window.removeEventListener('resize', this.handleResize)
@@ -77,6 +91,9 @@
     methods: {
       handleResize () {
         this.windowWidth = window.innerWidth
+      },
+      message (message) {
+        client.emit('message', {message, room: this.project._id})
       }
     }
   }

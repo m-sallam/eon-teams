@@ -3,12 +3,17 @@
     <el-card>
       <vue-perfect-scrollbar id="box" style="height: 50vh">
         <ul>
-          <li v-for="(message,index) in messages" :key="index">
-            <el-card class="message" shadow="hover" >
-              <img v-if="message.user.picture === 'none'" :src="`https://ui-avatars.com/api/?size=33&name=${message.user.name}&rounded=true`" align="middle">
-              <img v-else :src="message.user.picture" align="middle" width="20" height="20"  style=" object-fit: cover; border-radius:50%">
-              {{message.content}}
-            </el-card>
+          <li :class="message.user.username === user.username ? 'sent' : 'received'" v-for="(message,index) in messages" :key="index">
+            <el-tooltip :placement="message.user.username === user.username ? 'left' : 'right'">
+              <div slot="content">{{message.user.username}}<br/>{{new Date(message.time).toDateString()}}</div>
+              <el-card class="message" shadow="hover" :body-style="{padding: '10px'}">
+                <div v-if="message.user.username !== user.username" style="display: inline;">
+                  <img v-if="message.user.picture === 'none'" :src="`https://ui-avatars.com/api/?size=20&name=${message.user.name}&rounded=true`" align="top">
+                  <img v-else :src="message.user.picture" align="top" width="20" height="20"  style=" object-fit: cover; border-radius:50%">
+                </div> 
+                <span style="display: inline;"> {{message.content}}</span>
+              </el-card>     
+            </el-tooltip> 
           </li>
         </ul>        
       </vue-perfect-scrollbar>  
@@ -28,8 +33,7 @@
   export default {
     data () {
       return {
-        typedMessage: '',
-        allMessages: []
+        typedMessage: ''
       }
     },
     computed: {
@@ -37,7 +41,7 @@
         return this.$store.state.project.currentProject
       },
       messages () {
-        return this.allMessages
+        return this.$store.state.project.chat
       },
       user () {
         return this.$store.state.user.user
@@ -51,15 +55,21 @@
         let message = {
           content: this.typedMessage,
           time: new Date(),
-          user: this.user
+          user: this.user,
+          project: this.project,
+          type: 'text'
         }
-        this.allMessages.push(message)
+        this.$emit('message', message)
         this.typedMessage = ''
       }
     },
     updated () {
       const box = this.$el.querySelector('#box')
       box.scrollTop = box.scrollHeight
+    },
+    async created () {
+      await this.$store.dispatch('getChat')
+      this.$store.dispatch('noNewMessages')
     }
   }
 </script>
@@ -72,10 +82,14 @@
   ul {
     Display: flex;
     Flex-direction: column;
-    Justify-content: center;
+    padding-left: 0;
   }
-  li {
+  .received {
     display: flex;
-    justify-content: end;
+    justify-content: flex-start;
+  }
+  .sent {
+    display: flex;
+    justify-content: flex-end;
   }
 </style>
