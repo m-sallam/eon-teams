@@ -1,5 +1,5 @@
 <template>
-  <el-menu :default-active="$route.path" mode="horizontal" router>
+  <el-menu v-if="authenticated" :default-active="$route.path" mode="horizontal" router>
     <el-menu-item index="/"><img src="../assets/logo.png" width="40px"></el-menu-item>
     <el-menu-item v-if="!authenticated" index="/login" class="float-right">Login</el-menu-item>  
     <el-menu-item v-if="!authenticated" index="/register" class="float-right">Register</el-menu-item>  

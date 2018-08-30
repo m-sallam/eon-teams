@@ -1,13 +1,7 @@
 <template>
   <div v-loading.fullscreen.lock="globalLoading">
-    <el-container v-if="ready">
-      <el-header>
-        <top-menu/>
-      </el-header>     
-      <el-main>
-        <router-view/>
-      </el-main>
-    </el-container>
+    <top-menu/>
+    <router-view/>
   </div>
 </template>
 
@@ -33,5 +27,13 @@
   <style>
     .el-card {
       margin: 5px;
+    }
+    body {
+      margin: 0;
+      font-family: 'Dosis';
+    }
+    @font-face {
+      font-family: Dosis;
+      src: url(./assets/Dosis-Regular.ttf);
     }
   </style>
