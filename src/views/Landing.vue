@@ -4,6 +4,7 @@
       <vs-button @click="activeCard = 'login'" vs-color-text="FFFFFF" vs-color="rgba(255, 255, 255, 0)" vs-type="line" >Login</vs-button>
       <vs-button @click="activeCard = 'register'" vs-color-text="FFFFFF" vs-color="rgba(255, 255, 255, 0)" vs-type="line" >Register</vs-button>
     </vs-topbar>
+
     <vs-row vs-w="12" style="min-height: 100vh; margin:0px">
       <vs-col id="leftCol" vs-type="flex" vs-justify="center" vs-align="center" vs-lg="7" vs-sm="12" vs-xs="12">
         <div style="text-align: center;">
@@ -31,7 +32,6 @@
         <login v-if="activeCard === 'login'"/>
         <register v-if="activeCard === 'register'"/>
       </vs-col>
-      
     </vs-row>
   </div>
 </template>

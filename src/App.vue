@@ -29,11 +29,10 @@
       font-family: Diodrum;
       src: url('./assets/Diodrum Regular.otf');
     }
-    .el-card {
-      margin: 5px;
-    }
     body {
       margin: 0;
       font-family: 'Diodrum';
+      background: url("./assets/tasks.png") top left no-repeat;
+      background-size: 50vh;
     }
   </style>

@@ -1,17 +1,23 @@
 <template>
-  <el-menu v-if="authenticated" :default-active="$route.path" mode="horizontal" router>
-    <el-menu-item index="/"><img src="../assets/logo.png" width="40px"></el-menu-item>
-    <el-menu-item v-if="!authenticated" index="/login" class="float-right">Login</el-menu-item>  
-    <el-menu-item v-if="!authenticated" index="/register" class="float-right">Register</el-menu-item>  
-    <el-dropdown v-if="authenticated" trigger="click">
-      <img v-if="user.picture === 'none'" :src="`https://ui-avatars.com/api/?size=40&name=${user.name}&rounded=true`" style="cursor: pointer;">
-      <img v-else :src="user.picture" width="40" height="40"  style=" object-fit: cover; border-radius:50%; cursor: pointer;">
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item @click.native="$router.push('/profile')">Edit Profile</el-dropdown-item>
-        <el-dropdown-item @click.native="logout" divided>Logout</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-  </el-menu>  
+  <div>
+    <vs-topbar id="topbar" v-if="authenticated" vs-color="#455A64">
+      <vs-dropdown vs-trigger-click>
+        <vs-avatar v-if="user.picture === 'none'" size="40px" :text="user.name"/>
+        <vs-avatar v-else  size="40px" :src="user.picture"/>
+        <vs-dropdown-menu>
+          <vs-dropdown-item @click.native="$router.push('/')">
+            Projects
+          </vs-dropdown-item>
+          <vs-dropdown-item @click.native="$router.push('/profile')">
+            Profile
+          </vs-dropdown-item>
+          <vs-dropdown-item vs-divider @click.native="logout">
+            Logout
+          </vs-dropdown-item>
+        </vs-dropdown-menu>
+      </vs-dropdown>
+    </vs-topbar>
+  </div>
 </template>
 
 <script>
@@ -33,26 +39,12 @@
   }
 </script>
 
-<style scoped>
-  .el-menu {
-    overflow: hidden;
+<style>
+  #topbar {
     position: fixed;
-    top: 0; 
-    width: 100%;
-    z-index: 3;
-    left: 0;
-    border: 0;
-  }
-
-  .el-dropdown {
-    float:right;
-    right:30px;
-    top: 11px;
-    height: 40px;
-  }
-
-  .float-right {
-    float:right !important;
-    right:30px !important;
+    width: auto; 
+    right: 7%; 
+    border-radius: 0 0 50% 50%; 
+    z-index: 4;
   }
 </style>
