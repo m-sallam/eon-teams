@@ -5,7 +5,7 @@
       <vs-button @click="activeCard = 'register'" vs-color-text="FFFFFF" vs-color="rgba(255, 255, 255, 0)" vs-type="line" >Register</vs-button>
     </vs-topbar>
 
-    <vs-row vs-w="12" style="min-height: 100vh; margin:0px">
+    <vs-row vs-w="12" style="min-height: 100vh">
       <vs-col id="leftCol" vs-type="flex" vs-justify="center" vs-align="center" vs-lg="7" vs-sm="12" vs-xs="12">
         <div style="text-align: center;">
           <img src="../assets/tasks.png" alt="">

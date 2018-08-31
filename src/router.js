@@ -77,7 +77,11 @@ const router = new Router({
 })
 
 router.beforeEach(async (to, from, next) => {
-  store.dispatch('enableGlobalLoading')
+  router.app.$vs.loading({
+    color: '#455A64',
+    scale: 0.7,
+    type: 'sound'
+  })
   if (!store.state.ready) {
     await store.dispatch('autoLogin')
     store.dispatch('setReady')
@@ -98,7 +102,7 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 router.afterEach((to, from) => {
-  store.dispatch('disableGlobalLoading')
+  router.app.$vs.loading.close()
 })
 
 export default router

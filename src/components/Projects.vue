@@ -1,19 +1,37 @@
 <template>
-  <el-card :loading="loading">
+<div style="margin: 50px;width:100%">
+  <vs-card id="projectsCard">
     <div slot="header">
-      <span>Projects</span>
-      <el-button @click="addProject" style="float: right; padding: 3px 10px" type="text" icon="el-icon-plus"></el-button>
-      <el-button @click="filterOn = !filterOn" style="float: right; padding: 3px 0px" type="text" icon="el-icon-search"></el-button>
+      <vs-row vs-w="12">
+        <vs-col vs-lg="4" vs-sm="4" vs-xs="4">
+          <h3 style="margin: 3px 0 0 3px;">Projects</h3>
+        </vs-col>
+        <vs-col vs-lg="8" vs-sm="8" vs-xs="8">
+          <vs-input v-model="filter" placeholder="Filter"  vs-icon="search" style="width: 100%;"></vs-input> 
+        </vs-col>
+      </vs-row>        
     </div>
-    <el-input v-model="filter" v-if="filterOn" placeholder="Filter" clearable ></el-input> 
-    <vue-perfect-scrollbar style="height: 400px">
-      <el-menu style="border:0" router>
-        <el-menu-item exact :index="'/projects/' + project._id " v-for="project in projects" :key="project._id">
-          {{project.title}}
-        </el-menu-item>
-      </el-menu>
-    </vue-perfect-scrollbar>  
-  </el-card>
+    <div>
+      <vue-perfect-scrollbar style="height: 400px">
+        <vs-button v-for="project in filteredProjects" :key="project._id" @click="$router.push('/projects/' + project._id )"
+          style="width: 100%" vs-type="flat" vs-color="dark" vs-size="large">
+          {{ project.title }}
+        </vs-button>
+      </vue-perfect-scrollbar>  
+    </div>
+    <div slot="footer">
+      <vs-row vs-justify="flex-end" >
+        <vs-button @click="promptOn = !promptOn" style="border-radius: 50%" vs-color="#455A64" vs-icon="add"></vs-button>
+      </vs-row>
+    </div>
+  </vs-card>
+  <vs-prompt vs-color="dark" :vs-buttons-hidden="true" vs-title="New Project" :vs-active.sync="promptOn">
+      <form @submit.prevent="addProject">
+        <vs-input required vs-color="#455A64" placeholder="Project Title" v-model="newProjectTitle" style="width: 100%"/>
+        <vs-button vs-color="#455A64" style="float: right;">Create</vs-button>
+      </form>
+     </vs-prompt>
+  </div>
 </template>
   
 <script>
@@ -22,45 +40,37 @@
     data () {
       return {
         filter: '',
-        filterOn: false,
-        loading: true
+        promptOn: false,
+        newProjectTitle: ''
       }
     },
     computed: {
-      projects () {
+      filteredProjects () {
         return this.$store.state.project.projects.filter(i => i.title.toLowerCase().includes(this.filter.toLowerCase()))
       }
     },
     methods: {
       async addProject () {
         try {
-          let input = await this.$prompt('Enter project title', 'New Project', {
-            confirmButtonText: 'Create',
-            cancelButtonText: 'Cancel',
-            inputPattern: /\S/,
-            inputErrorMessage: 'Project Title is requeried'
-          })
-          this.$store.dispatch('enableGlobalLoading')
-          let {status, message, json} = await this.$store.dispatch('newProject', {title: input.value})
-          this.$store.dispatch('disableGlobalLoading')
+          this.$vs.loading({ container: 'body',scale: 0.7,type: 'sound' })
+          this.promptOn = false
+          let {status, message, json} = await this.$store.dispatch('newProject', {title: this.newProjectTitle})
+          this.$vs.loading.close('body > .con-vs-loading')
           if (status) {
             this.$router.push('/projects/' + json.id)
           } else {
-            this.$message({type: 'error', message})
+            this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
           }
         } catch (err) {
-          console.log(err)
+          console.log(typeof 'err')
         }
       }
     },
     async created () {
       let {status, message} = await this.$store.dispatch('getProjects')
-      if (status) {
-        this.$router.push('/')
-      } else {
-        this.$message({ showClose: true, message, type: 'error' })
+      if (!status) {
+        this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
       }
-      this.loading = false
     },
     components: {
       VuePerfectScrollbar

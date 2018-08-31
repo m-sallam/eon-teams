@@ -1,9 +1,11 @@
 <template>
-  <el-row>
-    <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8">
+  <vs-row vs-w="12" style="padding: 30px;">
+    <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-lg="6" vs-sm="12" vs-xs="12" >
       <projects/>
-    </el-col>
-  </el-row>
+    </vs-col>
+    <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-lg="6" vs-sm="12" vs-xs="12" >
+    </vs-col>
+  </vs-row>
 </template>
   
 <script>

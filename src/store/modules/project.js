@@ -40,9 +40,6 @@ const actions = {
   },
   async newProject ({commit, state, rootState}, project) {
     let res = await req('/projects', 'POST', JSON.stringify(project), rootState.user.token)
-    if (res.status) {
-      commit('updateProjects', res.json.projects)
-    }
     return res
   },
   async getProject ({commit, state, rootState}, id) {
