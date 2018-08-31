@@ -25,15 +25,15 @@
   </script>
 
   <style>
+     @font-face {
+      font-family: Diodrum;
+      src: url('./assets/Diodrum Regular.otf');
+    }
     .el-card {
       margin: 5px;
     }
     body {
       margin: 0;
-      font-family: 'Dosis';
-    }
-    @font-face {
-      font-family: Dosis;
-      src: url(./assets/Dosis-Regular.ttf);
+      font-family: 'Diodrum';
     }
   </style>
