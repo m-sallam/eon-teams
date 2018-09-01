@@ -86,7 +86,7 @@
             type:'confirm',
             color: 'danger',
             title: `Remove Member`,
-            text: 'Remove Member' + username + ' from the project?',
+            text: 'Remove Member ' + username + ' from the project?',
             acceptText: 'Remove',
             accept: async () => {
               this.$vs.loading({
