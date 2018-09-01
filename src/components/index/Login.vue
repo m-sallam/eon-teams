@@ -37,10 +37,10 @@
           type: 'sound'
         })
         let {status, message} = await this.$store.dispatch('login', this.loginForm)
-        this.$vs.loading.close()
         if (status) {
           this.$router.push('/')
         } else {
+          this.$vs.loading.close()
           this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
         }
       }

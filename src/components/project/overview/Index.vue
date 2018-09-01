@@ -1,14 +1,14 @@
 <template>
-    <div>
-      <el-row>
-        <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
+    <div >
+      <vs-row vs-w="12" style="padding: 60px 0px">
+        <vs-col vs-lg="8" vs-sm="12" vs-xs="12" style="padding: 0px 30px;">
           <activity/>
-        </el-col>
-        <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+        </vs-col>
+        <vs-col vs-lg="4" vs-sm="12" vs-xs="12" style="padding: 0px 30px;">
           <owner/>
           <members/>
-        </el-col>
-      </el-row>    
+        </vs-col>
+      </vs-row> 
     </div>
   </template>
   

@@ -1,13 +1,23 @@
 <template>
-  <el-card>
+  <vs-card >
     <div slot="header">
-      <span>Recent Activities</span>
+      <h3>Recent Activities</h3>
     </div>
-    <vue-perfect-scrollbar style="height: 350px">
-      <el-alert v-for="activity in activities" :key="activity.time" :title="activity.content"
-       :description="new Date(activity.time).toDateString()" type="info" :closable="false"></el-alert>
-    </vue-perfect-scrollbar>
-  </el-card> 
+    <div>
+      <vue-perfect-scrollbar style="height: 450px">
+        <vs-list>
+          <vs-list-item v-for="activity in activities" :key="activity.time" :title="activity.content" :subtitle="new Date(activity.time).toDateString()">
+          </vs-list-item>
+        </vs-list>
+      </vue-perfect-scrollbar> 
+    </div>
+    <div slot="footer">
+      <vs-row vs-justify="flex-end" >
+        <br>
+        <br>
+      </vs-row>
+    </div>
+  </vs-card>
 </template>
   
 <script>

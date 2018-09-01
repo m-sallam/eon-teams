@@ -43,10 +43,10 @@
           type: 'sound'
         })
         let {status, message} = await this.$store.dispatch('register', this.registerForm)
-        this.$vs.loading.close()
         if (status) {
           this.$router.push('/')
         } else {
+          this.$vs.loading.close()
           this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
         }
       }

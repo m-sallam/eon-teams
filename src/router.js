@@ -50,16 +50,19 @@ const router = new Router({
       children: [
         {
           path: '',
+          name: 'projectOverview',
           component: () => import(/* webpackChunkName: "project" */ './components/project/overview/Index.vue'),
           meta: { requiresAuth: true, requiresProject: true }
         },
         {
           path: 'lists',
+          name: 'projectLists',
           component: () => import(/* webpackChunkName: "project" */ './components/project/tasks/Index.vue'),
           meta: { requiresAuth: true, requiresProject: true },
           children: [
             {
               path: ':listId',
+              name: 'projectList',
               component: () => import(/* webpackChunkName: "project" */ './components/project/tasks/List.vue'),
               meta: { requiresAuth: true, requiresProject: true }
             }
@@ -67,6 +70,7 @@ const router = new Router({
         },
         {
           path: 'chat',
+          name: 'projectChat',
           component: () => import(/* webpackChunkName: "project" */ './components/project/chat/Index.vue'),
           meta: { requiresAuth: true, requiresProject: true }
         }
@@ -77,11 +81,13 @@ const router = new Router({
 })
 
 router.beforeEach(async (to, from, next) => {
-  router.app.$vs.loading({
-    color: '#455A64',
-    scale: 0.7,
-    type: 'sound'
-  })
+  if (from.name) {
+    router.app.$vs.loading({
+      color: '#455A64',
+      scale: 0.7,
+      type: 'sound'
+    })
+  }
   if (!store.state.ready) {
     await store.dispatch('autoLogin')
     store.dispatch('setReady')

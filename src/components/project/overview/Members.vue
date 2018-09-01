@@ -1,30 +1,60 @@
 <template>
-  <el-card>
+<div>
+  <vs-card>
     <div slot="header">
-      <span>Project Members</span>
-      <el-button v-if="project.owner.username === user.username" @click="addMember" style="float: right; padding: 3px 0" type="text" icon="el-icon-plus"></el-button>
-      <el-button v-if="project.owner.username === user.username" @click="removeMember" style="float: right; padding: 3px 10px" type="text" icon="el-icon-minus"></el-button>
-      <el-button v-else @click="leaveProject" style="float: right; padding: 3px 0" type="text" icon="el-icon-close"></el-button>
+      <h3>Members</h3>
     </div>
-    <vue-perfect-scrollbar style="height: 190px">
-      <el-table v-if="project.members.length > 0" :data="project.members" :show-header="false">
-        <el-table-column width="50">
-          <template slot-scope="props">
-            <img v-if="props.row.picture === 'none'" :src="`https://ui-avatars.com/api/?size=33&name=${props.row.name}&rounded=true`" align="middle">
-            <img v-else :src="props.row.picture" align="middle" width="33" height="33"  style=" object-fit: cover; border-radius:50%">
-          </template>
-        </el-table-column>
-        <el-table-column prop="username">
-        </el-table-column>
-      </el-table>
-    </vue-perfect-scrollbar>
-  </el-card>
+    <div>
+      <vue-perfect-scrollbar style="height: 270px">
+        <vs-list>
+          <vs-list-item v-for="member in project.members" :key="member.username" :title="member.name" :subtitle="member.username">
+            <template slot="avatar">
+              <vs-avatar v-if="member.picture === 'none'" size="33px" :text="member.name"/>
+              <vs-avatar v-else  size="33px" :src="member.picture"/>
+            </template>
+            <vs-button v-if="project.owner.username === user.username" @click="removeMember(member.username)"
+            style="border-radius: 50%" vs-type="flat" vs-icon="remove" vs-color="danger">
+
+            </vs-button>
+          </vs-list-item>
+        </vs-list>
+      </vue-perfect-scrollbar>
+    </div>
+    <div slot="footer">
+      <vs-row vs-justify="flex-end">
+        <vs-dropdown vs-trigger-click>
+          <vs-button style="border-radius: 50%" vs-color="#455A64" vs-icon="more_vert"></vs-button>
+          <vs-dropdown-menu style="width:200px;">
+            <vs-dropdown-item  v-if="project.owner.username === user.username" style="text-align: center" @click="promptOn = !promptOn">
+              Add Member
+            </vs-dropdown-item>
+            <vs-dropdown-item  v-else style="text-align: center" @click="leaveProject">
+              Leave Project
+            </vs-dropdown-item>
+          </vs-dropdown-menu>
+        </vs-dropdown>  
+      </vs-row>
+    </div>
+  </vs-card>
+  <vs-prompt vs-color="dark" :vs-buttons-hidden="true" vs-title="Add Member" :vs-active.sync="promptOn">
+      <form @submit.prevent="addMember">
+        <vs-input required vs-color="#455A64" placeholder="Member Username" v-model="newMemberUsername" style="width: 100%"/>
+        <vs-button vs-color="#455A64" style="float: right;">Add</vs-button>
+      </form>
+  </vs-prompt>
+</div>
 </template>
       
 <script>
   import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
   export default {
+    data () {
+      return {
+        promptOn: false,
+        newMemberUsername: ''
+      }
+    },
     computed: {
       project () {
         return this.$store.state.project.currentProject
@@ -35,65 +65,68 @@
     },
     methods: {
       async addMember () {
-        try {
-          let input = await this.$prompt('Enter Username', 'Add Member', {
-            confirmButtonText: 'Add',
-            cancelButtonText: 'Cancel',
-            inputPattern: /\S/,
-            inputErrorMessage: 'Username is requeried'
-          })
-          this.$store.dispatch('enableGlobalLoading')
-          let {status, message} = await this.$store.dispatch('addMember', input.value)
-          await this.$store.dispatch('getProject', this.$route.params.id)
-          this.$store.dispatch('disableGlobalLoading')
-          if (status) {
-            this.$message({type: 'success', message: 'Member Added!'})
-          } else {
-            this.$message({type: 'error', message})
-          }
-        } catch (err) {
-  
+        this.promptOn = false
+        this.$vs.loading({
+          color:'#455A64',
+          scale: 0.7,
+          type: 'sound'
+        })
+        let {status, message} = await this.$store.dispatch('addMember', this.newMemberUsername)
+        await this.$store.dispatch('getProject', this.$route.params.id)
+        this.newMemberUsername = ''
+        this.$vs.loading.close()
+        if (status) {
+          this.$vs.notify({ text:'Member Added!', color:'success', position: 'top-center' })
+        } else {
+          this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
         }
       },
-      async removeMember () {
-        try {
-          let input = await this.$prompt('Enter Username', 'Remove Member', {
-            confirmButtonText: 'Remove',
-            cancelButtonText: 'Cancel',
-            inputPattern: /\S/,
-            inputErrorMessage: 'Username is requeried'
-          })
-          this.$store.dispatch('enableGlobalLoading')
-          let {status, message} = await this.$store.dispatch('removeMember', input.value)
-          await this.$store.dispatch('getProject', this.$route.params.id)
-          this.$store.dispatch('disableGlobalLoading')
-          if (status) {
-            this.$message({type: 'success', message: 'Member Removed!'})
-          } else {
-            this.$message({type: 'error', message})
-          }
-        } catch (err) {
-          console.log(err)
-        }
+      async removeMember (username) {
+        this.$vs.dialog({
+            type:'confirm',
+            color: 'danger',
+            title: `Remove Member`,
+            text: 'Remove Member' + username + ' from the project?',
+            acceptText: 'Remove',
+            accept: async () => {
+              this.$vs.loading({
+                color:'#455A64',
+                scale: 0.7,
+                type: 'sound'
+              })
+              let {status, message} = await this.$store.dispatch('removeMember', username)
+              await this.$store.dispatch('getProject', this.$route.params.id)
+              this.$vs.loading.close()
+              if (status) {
+                this.$vs.notify({ text:'Member Removed!', color:'primary', position: 'top-center' })
+              } else {
+                this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
+              }
+            }
+        })
       },
       async leaveProject () {
-        try {
-          await this.$confirm('Are you sure?', 'Leave Project?', {
-            confirmButtonText: 'Leave',
-            cancelButtonText: 'Cancel',
-            type: 'warning'
-          })
-          this.$store.dispatch('enableGlobalLoading')
-          let {status, message} = await this.$store.dispatch('leaveProject')
-          this.$store.dispatch('disableGlobalLoading')
-          if (status) {
-            this.$router.push('/')
-          } else {
-            this.$message({type: 'error', message})
-          }
-        } catch (err) {
-          console.log(err)
-        }
+        this.$vs.dialog({
+            type:'confirm',
+            color: 'danger',
+            title: `Leave Project`,
+            text: 'Are you sure?',
+            acceptText: 'Leave',
+            accept: async () => {
+              this.$vs.loading({
+                color:'#455A64',
+                scale: 0.7,
+                type: 'sound'
+              })
+              let {status, message} = await this.$store.dispatch('leaveProject')
+              if (status) {
+                this.$router.push('/')
+              } else {
+                this.$vs.loading.close()
+                this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
+              }
+            }
+        })
       }
     },
     components: {

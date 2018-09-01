@@ -1,31 +1,22 @@
 <template>
-  <el-row>
-    <el-col :xs="24" :sm="2" :md="2" :lg="2" :xl="2" >
-      <el-menu :default-active="$route.path" :mode="menuMode" router :collapse="menuCollapse" :class="menuVertical">
-        <el-menu-item :index="'/projects/' + project._id">
-          <i class="el-icon-menu"></i>
-        </el-menu-item>
-        <el-menu-item :index="'/projects/' + project._id + '/lists'">
-          <i class="el-icon-tickets"></i>
-        </el-menu-item>
-        <el-badge :is-dot="newMessages">
-          <el-menu-item :index="'/projects/' + project._id + '/chat'">
-            <i class="el-icon-message"></i>
-          </el-menu-item>
-        </el-badge>
-      </el-menu>
-    </el-col>
-    <el-col :xs="24" :sm="22" :md="22" :lg="22" :xl="22" >
-      <el-card>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item to="/">home</el-breadcrumb-item>
-          <el-breadcrumb-item :to="$route.params.listId ? `/projects/${project._id}` : ''">{{project.title}}</el-breadcrumb-item>
-          <el-breadcrumb-item v-if="showList">{{list}}</el-breadcrumb-item>
-        </el-breadcrumb>
-      </el-card>
-      <router-view @message="message"/>
-    </el-col>
-  </el-row>
+  <div>
+    <vs-topbar style="width: 60vw; left: 7%; position: fixed; z-index:4" vs-color="#455A64">
+      <vs-button vs-icon="info" vs-type="line" vs-color-text="#FFFFFF" vs-color="rgba(255, 255, 255, 0)" 
+      @click="$router.push('/projects/' + project._id)">
+        Overview
+      </vs-button>
+      <vs-button vs-icon="playlist_add_check" vs-type="line" vs-color-text="#FFFFFF" vs-color="rgba(255, 255, 255, 0)" 
+      @click="$router.push('/projects/' + project._id + '/lists')">
+        Tasks
+      </vs-button>
+      <vs-button vs-icon="chat" vs-type="line" vs-color-text="#FFFFFF" vs-color="rgba(255, 255, 255, 0)" 
+      @click="$router.push('/projects/' + project._id + '/chat')">
+        Chat 
+        <i v-if="newMessages" style="font-size: 14px; color: #1f74ff" class="material-icons">notifications_active</i>
+      </vs-button>
+    </vs-topbar>
+    <router-view @message="message"/>
+  </div>
 </template>
 
 <script>
@@ -35,49 +26,15 @@
   export default {
     data () {
       return {
-        windowWidth: 0
       }
     },
     computed: {
       project () {
         return this.$store.state.project.currentProject
       },
-      menuMode () {
-        if (this.windowWidth > 768) {
-          return 'vertical'
-        } else {
-          return 'horizontal'
-        }
-      },
-      menuCollapse () {
-        if (this.windowWidth > 768) {
-          return true
-        } else {
-          return false
-        }
-      },
-      menuVertical () {
-        if (this.windowWidth > 768) {
-          return 'menuVertical'
-        } else {
-          return false
-        }
-      },
-      list () {
-        let list = this.project.lists.find(l => l._id === this.$route.params.listId)
-        if (!list) return false
-        return list.title
-      },
-      showList () {
-        return this.$route.params.listId
-      },
       newMessages () {
         return this.$store.state.project.newMessages
       }
-    },
-    created () {
-      window.addEventListener('resize', this.handleResize)
-      this.handleResize()
     },
     mounted () {
       client.emit('join', this.project._id)
@@ -85,13 +42,7 @@
         this.$store.dispatch('addMessageToChat', {message, route: this.$route})
       })
     },
-    destroyed () {
-      window.removeEventListener('resize', this.handleResize)
-    },
     methods: {
-      handleResize () {
-        this.windowWidth = window.innerWidth
-      },
       message (message) {
         client.emit('message', {message, room: this.project._id})
       }
@@ -99,9 +50,6 @@
   }
 </script>
 
-<style scoped>
-  .menuVertical {
-    height: 80vh;
-  }
+<style>
 </style>
 

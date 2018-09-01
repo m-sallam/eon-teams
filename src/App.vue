@@ -1,17 +1,19 @@
 <template>
-  <div v-loading.fullscreen.lock="globalLoading">
+  <vue-perfect-scrollbar style="height: 100vh">
     <top-menu/>
     <router-view/>
-  </div>
+  </vue-perfect-scrollbar>
 </template>
 
 <script>
   import topMenu from '@/components/TopMenu.vue'
+  import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
   export default {
     name: 'app',
     components: {
-      topMenu
+      topMenu,
+      VuePerfectScrollbar
     },
     computed: {
       globalLoading () {
@@ -32,7 +34,8 @@
     body {
       margin: 0;
       font-family: 'Diodrum';
-      background: url("./assets/tasks.png") top left no-repeat;
+      background: url("./assets/tasks.png") top left no-repeat fixed;
       background-size: 50vh;
+      overflow: hidden;
     }
   </style>

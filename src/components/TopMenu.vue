@@ -4,14 +4,14 @@
       <vs-dropdown vs-trigger-click>
         <vs-avatar v-if="user.picture === 'none'" size="40px" :text="user.name"/>
         <vs-avatar v-else  size="40px" :src="user.picture"/>
-        <vs-dropdown-menu>
-          <vs-dropdown-item @click.native="$router.push('/')">
+        <vs-dropdown-menu style="width: 200px">
+          <vs-dropdown-item style="text-align: center" to="/">
             Projects
           </vs-dropdown-item>
-          <vs-dropdown-item @click.native="$router.push('/profile')">
+          <vs-dropdown-item style="text-align: center" to="/profile">
             Profile
           </vs-dropdown-item>
-          <vs-dropdown-item vs-divider @click.native="logout">
+          <vs-dropdown-item vs-divider style="text-align: center" @click.native="logout">
             Logout
           </vs-dropdown-item>
         </vs-dropdown-menu>

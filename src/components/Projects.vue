@@ -30,7 +30,7 @@
         <vs-input required vs-color="#455A64" placeholder="Project Title" v-model="newProjectTitle" style="width: 100%"/>
         <vs-button vs-color="#455A64" style="float: right;">Create</vs-button>
       </form>
-     </vs-prompt>
+  </vs-prompt>
   </div>
 </template>
   
@@ -51,19 +51,20 @@
     },
     methods: {
       async addProject () {
-        try {
-          this.$vs.loading({ container: 'body',scale: 0.7,type: 'sound' })
+          this.$vs.loading({
+          color: '#455A64',
+          scale: 0.7,
+          type: 'sound'
+          })
           this.promptOn = false
           let {status, message, json} = await this.$store.dispatch('newProject', {title: this.newProjectTitle})
-          this.$vs.loading.close('body > .con-vs-loading')
           if (status) {
             this.$router.push('/projects/' + json.id)
           } else {
+            this.newProjectTitle = ''
+            this.$vs.loading.close()
             this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
           }
-        } catch (err) {
-          console.log(typeof 'err')
-        }
       }
     },
     async created () {
