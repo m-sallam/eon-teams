@@ -63,15 +63,17 @@
     },
     methods: {
       sendMessage () {
-        let message = {
-          content: this.typedMessage,
-          time: new Date(),
-          user: this.user,
-          project: this.project,
-          type: 'text'
+        if (this.typedMessage.trim() !== '') {
+          let message = {
+            content: this.typedMessage,
+            time: new Date(),
+            user: this.user,
+            project: this.project,
+            type: 'text'
+          }
+          this.$emit('message', message)
+          this.typedMessage = ''
         }
-        this.$emit('message', message)
-        this.typedMessage = ''
       }
     },
     updated () {
