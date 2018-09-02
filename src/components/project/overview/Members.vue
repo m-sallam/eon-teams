@@ -24,7 +24,7 @@
       <vs-row vs-justify="flex-end">
         <vs-dropdown vs-trigger-click>
           <vs-button style="border-radius: 50%" vs-color="#455A64" vs-icon="more_vert"></vs-button>
-          <vs-dropdown-menu style="width:200px;">
+          <vs-dropdown-menu vs-color="#455A64" style="width:200px;">
             <vs-dropdown-item  v-if="project.owner.username === user.username" style="text-align: center" @click="promptOn = !promptOn">
               Add Member
             </vs-dropdown-item>

@@ -7,7 +7,7 @@
           <h3 style="margin: 3px 0 0 3px;">Lists</h3>
         </vs-col>
         <vs-col vs-lg="8" vs-sm="8" vs-xs="8">
-          <vs-input v-model="filter" placeholder="Filter"  vs-icon="search" style="width: 100%;"></vs-input> 
+          <vs-input v-model="filter" placeholder="Filter" vs-color="#455A64" vs-icon="search" style="width: 100%;"></vs-input> 
         </vs-col>
       </vs-row>        
     </div>

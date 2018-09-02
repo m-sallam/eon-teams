@@ -17,9 +17,9 @@
               </div>
             </vs-col>
             <vs-col  vs-lg="7" vs-sm="12" vs-xs="12">
-              <vs-input style="width: 100%" placeholder="Name" v-model="user.name"></vs-input>
+              <vs-input style="width: 100%" vs-color="#455A64" placeholder="Name" v-model="user.name"></vs-input>
               <br>
-              <vs-input style="width: 100%" placeholder="Enail" v-model="user.email"></vs-input>
+              <vs-input style="width: 100%" vs-color="#455A64" placeholder="Enail" v-model="user.email"></vs-input>
               
             </vs-col>
           </vs-row>

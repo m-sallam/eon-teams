@@ -7,7 +7,7 @@
             <h3 style="margin: 3px 0 0 3px;">Tasks</h3>
           </vs-col>
           <vs-col vs-lg="8" vs-sm="8" vs-xs="8">
-            <vs-input v-model="filter" placeholder="Filter"  vs-icon="search" style="width: 100%;"></vs-input> 
+            <vs-input v-model="filter" placeholder="Filter" vs-color="#455A64" vs-icon="search" style="width: 100%;"></vs-input> 
           </vs-col>
         </vs-row>        
       </div>
@@ -27,7 +27,7 @@
       <div slot="footer">
         <vs-row vs-justify="flex-end" >
           <vs-button @click="dialogOn = !dialogOn" style="border-radius: 50%" vs-color="#455A64" vs-icon="add"></vs-button>
-          <vs-dropdown vs-trigger-click>
+          <vs-dropdown vs-color="#455A64" vs-trigger-click>
             <vs-button style="border-radius: 50%" vs-color="#455A64" vs-icon="more_vert"></vs-button>
             <vs-dropdown-menu style="width:200px;">
               <vs-dropdown-item style="text-align: center" @click="deleteList">

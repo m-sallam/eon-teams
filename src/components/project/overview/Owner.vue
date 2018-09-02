@@ -15,7 +15,7 @@
     </div>
     <div slot="footer">
       <vs-row vs-justify="flex-end">
-        <vs-dropdown v-if="project.owner.username === user.username" vs-trigger-click>
+        <vs-dropdown v-if="project.owner.username === user.username" vs-color="#455A64" vs-trigger-click>
           <vs-button style="border-radius: 50%" vs-color="#455A64" vs-icon="more_vert"></vs-button>
           <vs-dropdown-menu style="width:200px;">
             <vs-dropdown-item style="text-align: center" @click.native="deleteProject">
@@ -42,26 +42,26 @@
     methods: {
       async deleteProject () {
         this.$vs.dialog({
-            type:'confirm',
-            color: 'danger',
-            title: `Delete Project`,
-            text: 'Are you sure?',
-            acceptText: 'Delete',
-            accept:this.acceptDelete
-          })
+          type: 'confirm',
+          color: 'danger',
+          title: `Delete Project`,
+          text: 'Are you sure?',
+          acceptText: 'Delete',
+          accept: this.acceptDelete
+        })
       },
-      async acceptDelete (){
+      async acceptDelete () {
         this.$vs.loading({
-          color:'#455A64',
+          color: '#455A64',
           scale: 0.7,
           type: 'sound'
         })
-        let {status, message} = await this.$store.dispatch('deleteProject')
+        let { status, message } = await this.$store.dispatch('deleteProject')
         if (status) {
           this.$router.push('/')
         } else {
           this.$vs.loading.close()
-          this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
+          this.$vs.notify({ text: message, color: 'danger', position: 'top-center' })
         }
       }
     }

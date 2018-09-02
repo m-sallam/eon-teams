@@ -39,12 +39,12 @@
     mounted () {
       client.emit('join', this.project._id)
       client.on('message', message => {
-        this.$store.dispatch('addMessageToChat', {message, route: this.$route})
+        this.$store.dispatch('addMessageToChat', { message, route: this.$route })
       })
     },
     methods: {
       message (message) {
-        client.emit('message', {message, room: this.project._id})
+        client.emit('message', { message, room: this.project._id })
       }
     }
   }
