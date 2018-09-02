@@ -1,12 +1,12 @@
 <template>
-  <el-row>
-    <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8" >
+  <vs-row vs-w="12" style="padding: 60px 0px">
+    <vs-col vs-lg="4" vs-sm="12" vs-xs="12" style="padding: 0px 30px;">
       <lists/>
-    </el-col>
-    <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16" >
+    </vs-col>
+    <vs-col vs-lg="8" vs-sm="12" vs-xs="12" style="padding: 0px 30px;">
       <router-view></router-view>
-    </el-col>
-  </el-row>   
+    </vs-col>
+  </vs-row> 
 </template>
 
 <script>

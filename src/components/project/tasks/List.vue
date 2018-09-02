@@ -1,26 +1,45 @@
 <template>
-  <el-card v-if="list">
-    <div slot="header">
-      <span>Tasks</span>
-      <el-button @click="filterOn = !filterOn" style="float: right; padding: 3px 0px" type="text" icon="el-icon-search"></el-button>
-      <el-button @click="addDialog = true" style="float: right; padding: 3px 10px" type="text" icon="el-icon-plus"></el-button>
-      <el-button @click="deleteList" style="float: right; padding: 3px 0px" type="text" icon="el-icon-delete"></el-button>
-    </div>
-    <el-input v-model="filter" v-if="filterOn" placeholder="Filter" clearable ></el-input> 
-    <el-tabs type="card" >
-      <el-tab-pane label="Active">
-        <tasks :tasks="activeTasks" state="active" />
-      </el-tab-pane>
-      <el-tab-pane label="Completed">
-        <tasks :tasks="completedTasks" state="completed" />
-      </el-tab-pane>
-      <el-tab-pane label="Missed">
-        <tasks :tasks="missedTasks" state="missed" />
-      </el-tab-pane>
-    </el-tabs>
-    
-    <add-task :visible.sync="addDialog" />
-  </el-card>
+  <div>
+    <vs-card>
+      <div slot="header">
+        <vs-row vs-w="12">
+          <vs-col vs-lg="4" vs-sm="4" vs-xs="4">
+            <h3 style="margin: 3px 0 0 3px;">Tasks</h3>
+          </vs-col>
+          <vs-col vs-lg="8" vs-sm="8" vs-xs="8">
+            <vs-input v-model="filter" placeholder="Filter"  vs-icon="search" style="width: 100%;"></vs-input> 
+          </vs-col>
+        </vs-row>        
+      </div>
+      <div>
+        <vs-tabs :vs-color="tabColor" vs-alignment="fixed">
+          <vs-tab vs-label="Active" @click="tabColor = 'primary'">
+            <tasks :tasks="activeTasks" state="active" />
+          </vs-tab>
+          <vs-tab vs-label="Completed" @click="tabColor = 'success'">
+            <tasks :tasks="completedTasks" state="completed" />
+          </vs-tab>
+          <vs-tab vs-label="Missed" @click="tabColor = 'danger'">
+            <tasks :tasks="missedTasks" state="missed" />
+          </vs-tab>
+        </vs-tabs>
+      </div>
+      <div slot="footer">
+        <vs-row vs-justify="flex-end" >
+          <vs-button @click="dialogOn = !dialogOn" style="border-radius: 50%" vs-color="#455A64" vs-icon="add"></vs-button>
+          <vs-dropdown vs-trigger-click>
+            <vs-button style="border-radius: 50%" vs-color="#455A64" vs-icon="more_vert"></vs-button>
+            <vs-dropdown-menu style="width:200px;">
+              <vs-dropdown-item style="text-align: center" @click="deleteList">
+                Delete List
+              </vs-dropdown-item>
+            </vs-dropdown-menu>
+          </vs-dropdown>  
+        </vs-row>
+      </div>
+    </vs-card>
+    <add-task :visible.sync="dialogOn"></add-task>
+  </div>
 </template>
 
 <script>
@@ -30,9 +49,9 @@
   export default {
     data () {
       return {
-        filterOn: false,
         filter: '',
-        addDialog: false
+        dialogOn: false,
+        tabColor: 'primary'
       }
     },
     computed: {
@@ -58,23 +77,27 @@
     },
     methods: {
       async deleteList () {
-        try {
-          await this.$confirm('Are you sure?', 'Delete List?', {
-            confirmButtonText: 'Delete',
-            cancelButtonText: 'Cancel',
-            type: 'warning'
-          })
-          this.$store.dispatch('enableGlobalLoading')
-          let {status, message} = await this.$store.dispatch('deleteList', this.list._id)
-          this.$store.dispatch('disableGlobalLoading')
-          if (status) {
-            this.$router.push('/projects/' + this.project._id + '/lists')
-          } else {
-            this.$message({type: 'error', message})
+        this.$vs.dialog({
+          type: 'confirm',
+          color: 'danger',
+          title: `Delete List`,
+          text: 'Are you sure?',
+          acceptText: 'Delete',
+          accept: async () => {
+            this.$vs.loading({
+              color: '#455A64',
+              scale: 0.7,
+              type: 'sound'
+            })
+            let { status, message } = await this.$store.dispatch('deleteList', this.list._id)
+            if (status) {
+              this.$router.push('/projects/' + this.project._id + '/lists')
+            } else {
+              this.$vs.loading.close()
+              this.$message({ type: 'error', message })
+            }
           }
-        } catch (err) {
-          console.log(err)
-        }
+        })
       }
     }
   }

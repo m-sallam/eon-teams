@@ -67,65 +67,65 @@
       async addMember () {
         this.promptOn = false
         this.$vs.loading({
-          color:'#455A64',
+          color: '#455A64',
           scale: 0.7,
           type: 'sound'
         })
-        let {status, message} = await this.$store.dispatch('addMember', this.newMemberUsername)
+        let { status, message } = await this.$store.dispatch('addMember', this.newMemberUsername)
         await this.$store.dispatch('getProject', this.$route.params.id)
         this.newMemberUsername = ''
         this.$vs.loading.close()
         if (status) {
-          this.$vs.notify({ text:'Member Added!', color:'success', position: 'top-center' })
+          this.$vs.notify({ text: 'Member Added!', color: 'success', position: 'top-center' })
         } else {
-          this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
+          this.$vs.notify({ text: message, color: 'danger', position: 'top-center' })
         }
       },
       async removeMember (username) {
         this.$vs.dialog({
-            type:'confirm',
-            color: 'danger',
-            title: `Remove Member`,
-            text: 'Remove Member ' + username + ' from the project?',
-            acceptText: 'Remove',
-            accept: async () => {
-              this.$vs.loading({
-                color:'#455A64',
-                scale: 0.7,
-                type: 'sound'
-              })
-              let {status, message} = await this.$store.dispatch('removeMember', username)
-              await this.$store.dispatch('getProject', this.$route.params.id)
-              this.$vs.loading.close()
-              if (status) {
-                this.$vs.notify({ text:'Member Removed!', color:'primary', position: 'top-center' })
-              } else {
-                this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
-              }
+          type: 'confirm',
+          color: 'danger',
+          title: `Remove Member`,
+          text: 'Remove Member ' + username + ' from the project?',
+          acceptText: 'Remove',
+          accept: async () => {
+            this.$vs.loading({
+              color: '#455A64',
+              scale: 0.7,
+              type: 'sound'
+            })
+            let { status, message } = await this.$store.dispatch('removeMember', username)
+            await this.$store.dispatch('getProject', this.$route.params.id)
+            this.$vs.loading.close()
+            if (status) {
+              this.$vs.notify({ text: 'Member Removed!', color: 'primary', position: 'top-center' })
+            } else {
+              this.$vs.notify({ text: message, color: 'danger', position: 'top-center' })
             }
+          }
         })
       },
       async leaveProject () {
         this.$vs.dialog({
-            type:'confirm',
-            color: 'danger',
-            title: `Leave Project`,
-            text: 'Are you sure?',
-            acceptText: 'Leave',
-            accept: async () => {
-              this.$vs.loading({
-                color:'#455A64',
-                scale: 0.7,
-                type: 'sound'
-              })
-              let {status, message} = await this.$store.dispatch('leaveProject')
-              if (status) {
-                this.$router.push('/')
-              } else {
-                this.$vs.loading.close()
-                this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
-              }
+          type: 'confirm',
+          color: 'danger',
+          title: `Leave Project`,
+          text: 'Are you sure?',
+          acceptText: 'Leave',
+          accept: async () => {
+            this.$vs.loading({
+              color: '#455A64',
+              scale: 0.7,
+              type: 'sound'
+            })
+            let { status, message } = await this.$store.dispatch('leaveProject')
+            if (status) {
+              this.$router.push('/')
+            } else {
+              this.$vs.loading.close()
+              this.$vs.notify({ text: message, color: 'danger', position: 'top-center' })
             }
+          }
         })
       }
     },

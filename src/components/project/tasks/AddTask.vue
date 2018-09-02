@@ -1,4 +1,19 @@
 <template>
+  <!-- <vs-popup fullscreen title="fullscreen" :active.sync="visible">
+    <vs-row>
+      <vs-col vs-lg="7" vs-sm="12" vs-xs="12">
+
+      </vs-col>
+      <vs-col vs-lg="5" vs-sm="12" vs-xs="12">
+        <vs-upload multiple ref="upload"
+        :action="`${root}/attachments`"
+        :headers="{'Authorization': $store.state.user.token}"
+        :on-success="onSuccess" />
+      </vs-col>
+    </vs-row>
+      
+  </vs-popup> -->
+
   <el-dialog :close-on-press-escape="false" :show-close="false" fullscreen center title="Add Task" :visible.sync="visible">
     <el-form :label-position="''" label-width="120px">
       <el-row :gutter="30">
@@ -50,7 +65,7 @@
 
 <script>
   import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-  import {root} from '@/store/request'
+  import { root } from '@/store/request'
   
   export default {
     data () {
@@ -64,6 +79,12 @@
         fileList: [],
         root: root,
         uploadData: {}
+      }
+    },
+    watch: {
+      visible (newVal, oldVal) {
+        this.$emit('update:visible', newVal)
+        console.log(this.$refs.upload)
       }
     },
     computed: {
@@ -81,10 +102,10 @@
       async submitForm () {
         try {
           this.$store.dispatch('enableGlobalLoading')
-          let {status, message, json} = await this.$store.dispatch('addTask', {task: this.task, listId: this.list._id})
+          let { status, message, json } = await this.$store.dispatch('addTask', { task: this.task, listId: this.list._id })
           if (status) {
             if (this.fileList.length > 0) {
-              this.uploadData = {taskId: json.taskId}
+              this.uploadData = { taskId: json.taskId }
               setTimeout(() => {
                 this.$refs.upload.submit()
               }, 1000)
@@ -93,11 +114,11 @@
               this.$store.dispatch('getProject', this.project._id)
               this.$emit('update:visible', false)
               this.clearForm()
-              this.$message({type: 'success', message: 'Task Added!'})
+              this.$message({ type: 'success', message: 'Task Added!' })
             }
           } else {
             this.$store.dispatch('disableGlobalLoading')
-            this.$message({type: 'error', message})
+            this.$message({ type: 'error', message })
           }
         } catch (err) {
           console.log(err)
@@ -106,16 +127,16 @@
       onChange (file, list) {
         this.fileList = list
       },
-      onSuccess () {
+      onSuccess (e) {
         this.$store.dispatch('disableGlobalLoading')
         this.$store.dispatch('getProject', this.project._id)
         this.$emit('update:visible', false)
         this.clearForm()
-        this.$message({type: 'success', message: 'Task Added!'})
+        this.$message({ type: 'success', message: 'Task Added!' })
       },
       onError () {
         this.$store.dispatch('disableGlobalLoading')
-        this.$message({type: 'error', message: 'An error occured! make sure you are uploading files with the allowed extensions'})
+        this.$message({ type: 'error', message: 'An error occured! make sure you are uploading files with the allowed extensions' })
       },
       clearForm () {
         this.task = {

@@ -1,19 +1,37 @@
 <template>
-  <el-card>
+  <div>
+    <vs-card>
     <div slot="header">
-      <span>Lists</span>
-      <el-button @click="filterOn = !filterOn" style="float: right; padding: 3px 0px" type="text" icon="el-icon-search"></el-button>
-      <el-button @click="addList" style="float: right; padding: 3px 10px" type="text" icon="el-icon-plus"></el-button>     
+      <vs-row vs-w="12">
+        <vs-col vs-lg="4" vs-sm="4" vs-xs="4">
+          <h3 style="margin: 3px 0 0 3px;">Lists</h3>
+        </vs-col>
+        <vs-col vs-lg="8" vs-sm="8" vs-xs="8">
+          <vs-input v-model="filter" placeholder="Filter"  vs-icon="search" style="width: 100%;"></vs-input> 
+        </vs-col>
+      </vs-row>        
     </div>
-    <el-input v-model="filter" v-if="filterOn" placeholder="Filter" clearable ></el-input>   
-    <vue-perfect-scrollbar style="height: 55vh">
-      <el-menu router :default-active="$route.path" style="border:0px">
-        <el-menu-item exact :index="`/projects/${project._id}/lists/${list._id}`" v-for="list in lists" :key="list._id">
+    <div>
+      <vue-perfect-scrollbar style="height: 400px">
+        <vs-sidebar-item style="width:99%;" v-for="list in lists" :key="list._id" 
+        @click="$router.push(`/projects/${project._id}/lists/${list._id}`)" :vs-active="$route.params.listId==list._id">
           {{list.title}}
-        </el-menu-item>
-      </el-menu>
-    </vue-perfect-scrollbar>  
-  </el-card>
+        </vs-sidebar-item>
+      </vue-perfect-scrollbar>
+    </div>
+    <div slot="footer">
+      <vs-row vs-justify="flex-end" >
+        <vs-button @click="promptOn = !promptOn" style="border-radius: 50%" vs-color="#455A64" vs-icon="add"></vs-button>
+      </vs-row>
+    </div>
+  </vs-card>
+  <vs-prompt vs-color="dark" :vs-buttons-hidden="true" vs-title="New List" :vs-active.sync="promptOn">
+      <form @submit.prevent="addList">
+        <vs-input required vs-color="#455A64" placeholder="List Title" v-model="newListTitle" style="width: 100%"/>
+        <vs-button vs-color="#455A64" style="float: right;">Add</vs-button>
+      </form>
+  </vs-prompt>
+  </div>
 </template>
 
 <script>
@@ -22,8 +40,9 @@
   export default {
     data () {
       return {
-        filterOn: false,
-        filter: ''
+        filter: '',
+        promptOn: false,
+        newListTitle: ''
       }
     },
     computed: {
@@ -36,23 +55,18 @@
     },
     methods: {
       async addList () {
-        try {
-          let input = await this.$prompt('Enter list title', 'Add List', {
-            confirmButtonText: 'Add',
-            cancelButtonText: 'Cancel',
-            inputPattern: /\S/,
-            inputErrorMessage: 'List Title is requeried'
-          })
-          this.$store.dispatch('enableGlobalLoading')
-          let {status, message, json} = await this.$store.dispatch('addList', {title: input.value})
-          this.$store.dispatch('disableGlobalLoading')
-          if (status) {
-            this.$router.push('/projects/' + this.project._id + '/lists/' + json.listId)
-          } else {
-            this.$message({type: 'error', message})
-          }
-        } catch (err) {
-          console.log(err)
+        this.promptOn = false
+        this.$vs.loading({
+          color: '#455A64',
+          scale: 0.7,
+          type: 'sound'
+        })
+        let { status, message, json } = await this.$store.dispatch('addList', { title: this.newListTitle })
+        if (status) {
+          this.$router.push('/projects/' + this.project._id + '/lists/' + json.listId)
+        } else {
+          this.$vs.loading.close()
+          this.$vs.notify({ text: message, color: 'danger', position: 'top-center' })
         }
       }
     },

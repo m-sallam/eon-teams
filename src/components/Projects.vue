@@ -51,26 +51,26 @@
     },
     methods: {
       async addProject () {
-          this.$vs.loading({
+        this.$vs.loading({
           color: '#455A64',
           scale: 0.7,
           type: 'sound'
-          })
-          this.promptOn = false
-          let {status, message, json} = await this.$store.dispatch('newProject', {title: this.newProjectTitle})
-          if (status) {
-            this.$router.push('/projects/' + json.id)
-          } else {
-            this.newProjectTitle = ''
-            this.$vs.loading.close()
-            this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
-          }
+        })
+        this.promptOn = false
+        let { status, message, json } = await this.$store.dispatch('newProject', { title: this.newProjectTitle })
+        if (status) {
+          this.$router.push('/projects/' + json.id)
+        } else {
+          this.newProjectTitle = ''
+          this.$vs.loading.close()
+          this.$vs.notify({ text: message, color: 'danger', position: 'top-center' })
+        }
       }
     },
     async created () {
-      let {status, message} = await this.$store.dispatch('getProjects')
+      let { status, message } = await this.$store.dispatch('getProjects')
       if (!status) {
-        this.$vs.notify({ text:message, color:'danger', position: 'top-center' })
+        this.$vs.notify({ text: message, color: 'danger', position: 'top-center' })
       }
     },
     components: {

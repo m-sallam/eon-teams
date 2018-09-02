@@ -9,7 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'vuesax/dist/vuesax.css'
 import 'material-icons/iconfont/material-icons.css'
 
-Vue.use(element, {locale})
+Vue.use(element, { locale })
 Vue.use(vuesax)
 
 Vue.config.productionTip = false
