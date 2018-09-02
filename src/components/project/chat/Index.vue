@@ -11,7 +11,7 @@
           <vue-perfect-scrollbar id="box" style="height: 70vh">
             <ul>
               <li :class="message.user.username === user.username ? 'sent' : 'received'" v-for="(message,index) in messages" :key="index">
-                <vs-tooltip :title="message.user.username" :text="new Date(message.time).toDateString()" :position="message.user.username === user.username ? 'left' : 'right'" >
+                <vs-tooltip style="word-break: break-all;" :title="message.user.username" :text="new Date(message.time).toDateString()" :position="message.user.username === user.username ? 'left' : 'right'" >
                   <vs-chip :color="message.user.username === user.username ? 'dark' : ''">
                     <vs-avatar v-if="message.user.picture === 'none'" :text="message.user.name"/>
                     <vs-avatar v-else :src="message.user.picture"/>
